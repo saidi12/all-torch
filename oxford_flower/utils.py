@@ -5,15 +5,14 @@ import scipy
 from PIL import Image
 import os
 class OxfordDataset(Dataset):
-    def __init__(self, rootdir, transforms):
+    def __init__(self, rootdir, transform):
         self.rootdir = rootdir
-        self.img_path = os.path.join(self.rootdir,"jpg")
-        self.labels_path = os.path.join(self.rootdir,"imagelabels.mat")
-        self.labels = scipy.io.loadmat(self.labels_path)
-
-        self.labels = self.labels["labels"][0] - 1
-
-        self.transforms = transforms
+        self.img_dir = os.path.join(rootdir, "jpg")
+        
+        labels_mat = scipy.io.loadmat(os.path.join(self.rootdir, "imagelabels.mat"))
+        self.labels = labels_mat['labels'][0] - 1
+        self.transform = transform
+        self.error_logs = []
     
     def __len__(self):
         return len(self.labels)
